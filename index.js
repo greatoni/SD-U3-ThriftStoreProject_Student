@@ -54,7 +54,74 @@ const salesTax = [
 ];
 
 //! Classes
+class item {
+    addItem(UPC, Name, buyPrice, quantity, markUp)
+    {
+        return new item(UPC, Name, buyPrice, quantity, (buyPrice += (buyPrice * markUp)))
+    }
+    addItem(UPC, Name, buyPrice, markUp)
+    {
+        return new item(UPC, Name, buyPrice, 1, (buyPrice += (buyPrice * markUp)))
+    }
+    
+    constructor(UPC, Name, buyPrice, quantity, sellPrice,)
+    {
+        this.UPC = UPC;
+        this.Name = Name;
+        this.buyPrice = buyPrice;
+        this.quantity = quantity;
+        this.sellPrice = sellPrice;
+    }
+}
 
+class Store {
+    openStore(Name, location, balance)
+    {
+        //not Implemented
+        return new Store(Name, location, notImplemented, balance, 0,0)
+    }
+    constructor(Name, location,  salesTax, balance, profit, expenses)
+    {
+        this.Name = Name;
+        this.location = location;
+        this.salesTax = salesTax;
+        this.inventory = inventory;
+        this.balance = balance;
+        this.profit = profit;
+        this.expenses = expenses ;
+        this.inventory = [];
+    }
+    buyItem(newItem, quantity)
+    {
+        if (newItem.buyPrice * quantity > this.balance)
+        {
+            return("There isn't enough money in the budget to purchase")
+        }
+        else
+        {
+            let duped = false; //Determines if an item in the inventory already matches this item's UPC!
+            for (items of this.inventory)
+            {
+                if (items.UPC == newItem.UPC)
+                {
+                    duped = true; //Since this item matches, we switch duped to true.
+                    //We then update the item and deduct the budget accordingly.
+                    items += quantity;
+                    this.balance -= newItem.buyPrice * quantity;
+                }
+            }
+            if (!duped) //If we go through the loop without tripping Duped, we are able to add the item to the array.
+            {
+                
+            }
+        }
+        //Not Implemented;
+    }
+    sellItem()
+    {
+        //Not Implemented
+    }
+}
 
 //! CREATE STORES
 // Generate 3 different stores, each in a different state.
