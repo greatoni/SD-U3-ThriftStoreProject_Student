@@ -187,13 +187,13 @@ class Store {
         if(buying)
         {
             taxedNumber = number + (number * salesTax)
-            return(taxedNumber.toFixed(2))
+            return(taxedNumber)
         }
         //Subtracts the sales tax to a number if selling, use this for selling items and for calculating profits.
         else
         {
             taxedNumber = number + (number * salesTax)
-            return(taxedNumber.toFixed(2))
+            return(taxedNumber)
         }
     }
 }
