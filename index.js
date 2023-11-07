@@ -61,7 +61,7 @@ class item {
     {
         let decimalifiedPrice = buyPrice * 0.01;
         let sellPrice = buyPrice += (buyPrice * markUp)
-        let decimalifiedsellPrice = sellPrice / 100;
+        let decimalifiedsellPrice = sellPrice * 0.01;
         return new item(UPC, Name, decimalifiedPrice.toFixed(2), quantity, decimalifiedsellPrice.toFixed(2))
     }
     // !WHEN TYPING IN THE BUY PRICE PLEASE TYPE THE NUMBER IN CENTS!
@@ -80,16 +80,17 @@ class Store {
     static openStore(Name, location, balance)
     {
         let found = salesTax.find((states) => states.state == location)
-        return new Store(Name, location, found.tax, balance, 0,0)
+        return new Store(Name, location, found.tax, balance)
     }
-    constructor(Name, location,  salesTax, balance, profit, expenses)
+    constructor(Name, location,  salesTax, balance)
     {
         this.Name = Name;
         this.location = location;
         this.salesTax = salesTax;
         this.balance = balance; //NOTATE THIS IN CENTS!!!!
-        this.profit = profit;
-        this.expenses = expenses ;
+        this.profit = 0;
+        this.expenses = 0 ;
+        this.paidTax = 0;
         //inventory is always initialized as a blank array.
         this.inventory = [];
     }
@@ -193,6 +194,8 @@ class Store {
         //Adds the sales tax to a number if buying, use this for purchases and for calculating expenses.
         if(buying)
         {
+            this.paidTax += parseFloat(wholeNumber * this.salesTax)
+            this.paidTax = parseFloat(this.paidTax.toFixed(2))
             taxedNumber = wholeNumber + (wholeNumber * this.salesTax)
             taxedNumber = parseFloat(taxedNumber.toFixed(2))
             return(taxedNumber)
@@ -200,7 +203,9 @@ class Store {
         //Subtracts the sales tax to a number if selling, use this for selling items and for calculating profits.
         else
         {
-            taxedNumber = wholeNumber + (wholeNumber * this.salesTax)
+            this.paidTax += parseFloat(wholeNumber * this.salesTax)
+            this.paidTax = parseFloat(this.paidTax.toFixed(2))
+            taxedNumber = wholeNumber - (wholeNumber * this.salesTax)
             taxedNumber = parseFloat(taxedNumber.toFixed(2))
             return(taxedNumber)
         }
@@ -259,7 +264,7 @@ Vermontopia.sellItem(1, 2); //Testing the reduction of quantity, and attempting 
 Vermontopia.sellItem(2,1);
 
 //* Second Store
-Texania.sellItem(20,10);
+Texania.sellItem(20,1);
 //* Third Store
 Dcopolis.sellItem(10,1);
 Dcopolis.sellItem(1,1) //Attempting to sell an item the store does not have!
