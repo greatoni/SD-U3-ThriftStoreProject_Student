@@ -62,7 +62,7 @@ class item {
         let decimalifiedPrice = buyPrice * 0.01;
         let sellPrice = buyPrice += (buyPrice * markUp)
         let decimalifiedsellPrice = sellPrice / 100;
-        return new item(UPC, Name, decimalifiedPrice, quantity, decimalifiedsellPrice.toFixed(2))
+        return new item(UPC, Name, decimalifiedPrice.toFixed(2), quantity, decimalifiedsellPrice.toFixed(2))
     }
     // !WHEN TYPING IN THE BUY PRICE PLEASE TYPE THE NUMBER IN CENTS!
     constructor(UPC, Name, buyPrice, quantity, sellPrice,)
@@ -105,7 +105,8 @@ class Store {
         else
         {
             let duped = false; //Determines if an item in the inventory already matches this item's UPC!
-            let totalCosts = newItem.quantity * newItem.buyPrice;
+            let totalCosts = this.applyTaxes(newItem.quantity * newItem.buyPrice, true);
+
             for (let items of this.inventory)
             {
                 if (items.UPC == newItem.UPC)
@@ -121,6 +122,9 @@ class Store {
                     this.balance -= totalCosts;
                     this.expenses += totalCosts;
 
+                    this.balance =parseFloat(this.balance.toFixed(2))
+                    this.expenses =parseFloat(this.expenses.toFixed(2))
+
                     //Rounding!!!!
                     //this.balance = this.balance.toFixed(2)
                     //this.expenses = this.expenses.toFixed(2)
@@ -134,6 +138,9 @@ class Store {
                 //We deduct from the balance and add to the expenses.
                 this.balance -= totalCosts;
                 this.expenses += totalCosts;
+
+                this.balance =parseFloat(this.balance.toFixed(2))
+                this.expenses =parseFloat(this.expenses.toFixed(2))
 
                 //ROUNDING!!!!
                 //this.balance = this.balance.toFixed(2)
@@ -156,16 +163,16 @@ class Store {
                 if(quantity <= items.quantity) //Checks to see if there is enough
                 {
                     //Remove item quantity and subtract items from the inventory.
-                    let totalNet = items.sellPrice * quantity;
+                    let totalNet = this.applyTaxes((items.sellPrice * quantity), false);
                     items.quantity -= quantity;
                     
                     //Run numbers, add balance, and add profit.
                     this.balance += totalNet;
-                    this.profit += totalNet; 
+                    this.profit += (totalNet-items.buyPrice); 
 
+                    this.balance= parseFloat(this.balance.toFixed(2))
+                    this.profit = parseFloat(this.profit.toFixed(2))
                     //Rounding!!!!
-                    //this.balance = this.balance.toFixed(2);
-                    //this.profit = this.profit.toFixed(2);
 
                     return;
                 }
@@ -180,23 +187,26 @@ class Store {
         console.log("NO CORRESPONDING ITEM TO SELL!")
     }
 
-    applyTaxes(number, buying)
+    applyTaxes(wholeNumber, buying)
     {
         let taxedNumber = 0;
         //Adds the sales tax to a number if buying, use this for purchases and for calculating expenses.
         if(buying)
         {
-            taxedNumber = number + (number * salesTax)
+            taxedNumber = wholeNumber + (wholeNumber * this.salesTax)
+            taxedNumber = parseFloat(taxedNumber.toFixed(2))
             return(taxedNumber)
         }
         //Subtracts the sales tax to a number if selling, use this for selling items and for calculating profits.
         else
         {
-            taxedNumber = number + (number * salesTax)
+            taxedNumber = wholeNumber + (wholeNumber * this.salesTax)
+            taxedNumber = parseFloat(taxedNumber.toFixed(2))
             return(taxedNumber)
         }
     }
 }
+
 
 //! CREATE STORES
 // Generate 3 different stores, each in a different state.
@@ -246,16 +256,13 @@ Dcopolis.buyItem(shoes);
 //* First Store
 Vermontopia.sellItem(1, 5);
 Vermontopia.sellItem(1, 2); //Testing the reduction of quantity, and attempting to sell items that are not present.
-
-Texania.sellItem(22,1);
-
-Dcopolis.sellItem(10,1);
-Dcopolis.sellItem(1,1) //Attempting to sell an item the store does not have!
+Vermontopia.sellItem(2,1);
 
 //* Second Store
-
+Texania.sellItem(20,10);
 //* Third Store
-
+Dcopolis.sellItem(10,1);
+Dcopolis.sellItem(1,1) //Attempting to sell an item the store does not have!
 //! Testing
 console.log(Vermontopia);
 console.log(Dcopolis);
